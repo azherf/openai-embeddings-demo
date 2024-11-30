@@ -1,25 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
 
-function App() {
+const App = () => {
+    const [text, setText] = useState("");
+    const [response, setResponse] = useState("");
+    const getEmbedding = async () => {
+        const response = await fetch("http://localhost:8000/embedding", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({text})
+        })
+        const data = await response.json();
+        setResponse(data)
+    }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <input onChange={e => setText(e.target.value)} />
+      <button onClick={ getEmbedding }>Submit</button>
+        <p>{response}</p>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
